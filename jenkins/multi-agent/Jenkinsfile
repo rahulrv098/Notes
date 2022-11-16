@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven-3.8.6'
+    }
+        stages {
+            stage('code checkout') {
+                agent {
+                    label "Master"
+                }
+                steps {
+                    git url:"https://github.com/rahulrv098/hello-world.git"
+                    stash 'source'
+                }
+            }
+            stage('build maven') {
+                agent {
+                    label "Node1"
+                }
+                steps {
+                    unstash 'source'
+                    sh 'mvn clean package'
+                }
+            }
+        }
+    }
