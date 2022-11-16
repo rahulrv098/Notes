@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+        stages {
+            stage("stage01") {
+                parallel {
+                    stage("parallel_01") {
+                        steps {
+                            sh 'echo "First branch"'
+                        }
+                    }
+
+                    stage("parallel_02") {
+                        steps {
+                            sh 'echo "Second branch"'
+                        }
+                    }
+                }
+            }
+            stage("stage02") {
+                steps {
+                    sh 'echo "second stage"'
+                }
+            }
+        }
+}
