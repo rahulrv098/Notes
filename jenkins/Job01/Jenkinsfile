@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+        stages {
+            stage('OS_NAME') {
+                steps {
+                    sh 'uname'
+                }
+            }
+            stage('SERVER_NAME') {
+                steps {
+                    sh 'hostname'
+                }
+            }
+            stage('IP') {
+                steps {
+                    sh 'hostname -I'
+                }
+            }
+            stage('MEMORY_INFO') {
+                steps {
+                    sh 'free -h'
+                }
+            }
+            stage('CPU_INFO') {
+                steps {
+                    sh 'lscpu'
+                }
+            }
+            stage('DISK_INFO') {
+                steps {
+                    sh 'df -h'
+                }
+            }
+        }
+}
