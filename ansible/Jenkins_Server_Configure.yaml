@@ -1,0 +1,50 @@
+---
+  - name: Configure Jenkins Build Server
+    hosts: buildservers
+    connection: local
+    become: yes
+    vars:
+      java: openjdk-11-jdk
+      jenkins:
+        apt-key-url: https://pkg.jenkins.io/debian/jenkins-ci.org.key
+        repo-url: deb http://pkg.jenkins.io/debian-stable binary/
+ 
+    tasks:  
+      - name: apt-update
+        apt:
+          force_apt_get: yes
+          upgrade: yes
+
+      - name: install-java
+        apt:
+          name: "{{java}}"
+
+      - name: get-jenkins-apt-key
+        apt_key:
+          url: "{{jenkins['apt-key-url']}}"
+          state: present
+
+      - name: configure-jenkins-package-repo
+        apt_repository:
+          repo: "{{jenkins['repo-url']}}"
+          filename: 'jenkins'
+          state: present
+          
+      - name: apt-update
+        apt:
+          force_apt_get: yes
+          upgrade: yes
+
+      - name: install-jenkins
+        apt:
+          name: jenkins
+          state: present    
+        notify: 
+          - jenkins-start
+
+    handlers:
+      - name: jenkins-start
+        service:
+          name: jenkins
+          enabled: yes
+          state: started
